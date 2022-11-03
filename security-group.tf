@@ -32,3 +32,12 @@ resource "aws_security_group_rule" "ec2_out_https" {
   to_port           = 443
   cidr_blocks       = ["0.0.0.0/0"]
 }
+
+resource "aws_security_group_rule" "ec2_out_ssh" {
+  security_group_id = aws_security_group.ec2_sg.id
+  type              = "egress"
+  protocol          = "tcp"
+  from_port         = 22
+  to_port           = 22
+  cidr_blocks       = ["0.0.0.0/0"]
+}
