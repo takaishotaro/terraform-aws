@@ -10,7 +10,7 @@ resource "aws_vpc" "vpc" {
   assign_generated_ipv6_cidr_block = false
 
   tags = {
-    Name    = "${local.project_name}-vpc"
+    Name = "${local.project_name}-vpc"
   }
 }
 
@@ -25,7 +25,7 @@ resource "aws_subnet" "public_subnet_1a" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name    = "${local.project_name}-public-subnet-1a"
+    Name = "${local.project_name}-public-subnet-1a"
   }
 }
 
@@ -35,7 +35,7 @@ resource "aws_subnet" "public_subnet_1c" {
   cidr_block        = local.public_subnet.ap-northeast-1c
 
   tags = {
-    Name    = "${local.project_name}-public-subnet-1c"
+    Name = "${local.project_name}-public-subnet-1c"
   }
 }
 
@@ -45,7 +45,7 @@ resource "aws_subnet" "private_subnet_1a" {
   cidr_block        = local.private_subnet.ap-northeast-1a
 
   tags = {
-    Name    = "${local.project_name}-private-subnet-1a"
+    Name = "${local.project_name}-private-subnet-1a"
   }
 }
 
@@ -55,7 +55,7 @@ resource "aws_subnet" "private_subnet_1c" {
   cidr_block        = local.private_subnet.ap-northeast-1c
 
   tags = {
-    Name    = "${local.project_name}-private-subnet-1c"
+    Name = "${local.project_name}-private-subnet-1c"
   }
 }
 
@@ -67,7 +67,7 @@ resource "aws_route_table" "public_rt" {
   vpc_id = aws_vpc.vpc.id
 
   tags = {
-    Name    = "${local.project_name}-public-rt"
+    Name = "${local.project_name}-public-rt"
   }
 }
 
@@ -81,21 +81,29 @@ resource "aws_route_table_association" "public_rt_1c" {
   subnet_id      = aws_subnet.public_subnet_1c.id
 }
 
-resource "aws_route_table" "private_rt" {
+resource "aws_route_table" "private_rt_1a" {
   vpc_id = aws_vpc.vpc.id
 
   tags = {
-    Name    = "${local.project_name}-private-rt"
+    Name = "${local.project_name}-private-rt-1a"
+  }
+}
+
+resource "aws_route_table" "private_rt_1c" {
+  vpc_id = aws_vpc.vpc.id
+
+  tags = {
+    Name = "${local.project_name}-private-rt-1c"
   }
 }
 
 resource "aws_route_table_association" "private_rt_1a" {
-  route_table_id = aws_route_table.private_rt.id
+  route_table_id = aws_route_table.private_rt_1a.id
   subnet_id      = aws_subnet.private_subnet_1a.id
 }
 
 resource "aws_route_table_association" "private_rt_1c" {
-  route_table_id = aws_route_table.private_rt.id
+  route_table_id = aws_route_table.private_rt_1c.id
   subnet_id      = aws_subnet.private_subnet_1c.id
 }
 
@@ -107,7 +115,7 @@ resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.vpc.id
 
   tags = {
-    Name    = "${local.project_name}-private-igw"
+    Name = "${local.project_name}-private-igw"
   }
 }
 
@@ -125,7 +133,7 @@ resource "aws_eip" "ngw_1a" {
   depends_on = [aws_internet_gateway.igw]
 
   tags = {
-    Name    = "${local.project_name}-eip-ngw-1a"
+    Name = "${local.project_name}-eip-ngw-1a"
   }
 }
 
@@ -134,7 +142,7 @@ resource "aws_eip" "ngw_1c" {
   depends_on = [aws_internet_gateway.igw]
 
   tags = {
-    Name    = "${local.project_name}-eip-ngw-1c"
+    Name = "${local.project_name}-eip-ngw-1c"
   }
 }
 
@@ -143,28 +151,34 @@ resource "aws_eip" "ngw_1c" {
 # ---------------------------------------------
 resource "aws_nat_gateway" "ngw_1a" {
   allocation_id = aws_eip.ngw_1a.id
-  subnet_id = aws_subnet.public_subnet_1a.id
+  subnet_id     = aws_subnet.public_subnet_1a.id
 
   depends_on = [aws_internet_gateway.igw]
 
   tags = {
-    Name    = "${local.project_name}-ngw-1a"
+    Name = "${local.project_name}-ngw-1a"
   }
 }
 
 resource "aws_nat_gateway" "ngw_1c" {
   allocation_id = aws_eip.ngw_1c.id
-  subnet_id = aws_subnet.public_subnet_1a.id
+  subnet_id     = aws_subnet.public_subnet_1a.id
 
   depends_on = [aws_internet_gateway.igw]
 
   tags = {
-    Name    = "${local.project_name}-ngw-1a"
+    Name = "${local.project_name}-ngw-1a"
   }
 }
 
-resource "aws_route" "public_rt_ngw" {
-  route_table_id         = aws_route_table.private_rt.id
+resource "aws_route" "public_rt_ngw_1a" {
+  route_table_id         = aws_route_table.private_rt_1a.id
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id         = aws_nat_gateway.ngw_1a.id
+}
+
+resource "aws_route" "public_rt_ngw_1c" {
+  route_table_id         = aws_route_table.private_rt_1c.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.ngw_1c.id
 }
