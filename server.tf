@@ -16,4 +16,3 @@ resource "aws_instance" "yourdevops-server" {
     aws_subnet.private_subnet_1a
   ]
 }
-
