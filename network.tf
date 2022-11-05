@@ -3,14 +3,14 @@
 # VPC
 # ---------------------------------------------
 resource "aws_vpc" "vpc" {
-  cidr_block                       = local.vpc_cidr
+  cidr_block                       = var.vpc_cidr
   instance_tenancy                 = "default"
   enable_dns_support               = true
   enable_dns_hostnames             = true
   assign_generated_ipv6_cidr_block = false
 
   tags = {
-    Name = "${local.project_name}-vpc"
+    Name = "${var.env_code}-vpc"
   }
 }
 
@@ -20,42 +20,42 @@ resource "aws_vpc" "vpc" {
 resource "aws_subnet" "public_subnet_1a" {
   vpc_id            = aws_vpc.vpc.id
   availability_zone = "ap-northeast-1a"
-  cidr_block        = local.public_subnet.ap-northeast-1a
+  cidr_block        = var.public_cidr[0]
 
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "${local.project_name}-public-subnet-1a"
+    Name = "${var.env_code}-public-subnet-1a"
   }
 }
 
 resource "aws_subnet" "public_subnet_1c" {
   vpc_id            = aws_vpc.vpc.id
   availability_zone = "ap-northeast-1c"
-  cidr_block        = local.public_subnet.ap-northeast-1c
+  cidr_block        = var.public_cidr[1]
 
   tags = {
-    Name = "${local.project_name}-public-subnet-1c"
+    Name = "${var.env_code}-public-subnet-1c"
   }
 }
 
 resource "aws_subnet" "private_subnet_1a" {
   vpc_id            = aws_vpc.vpc.id
   availability_zone = "ap-northeast-1a"
-  cidr_block        = local.private_subnet.ap-northeast-1a
+  cidr_block        = var.private_cidr[0]
 
   tags = {
-    Name = "${local.project_name}-private-subnet-1a"
+    Name = "${var.env_code}-private-subnet-1a"
   }
 }
 
 resource "aws_subnet" "private_subnet_1c" {
   vpc_id            = aws_vpc.vpc.id
   availability_zone = "ap-northeast-1c"
-  cidr_block        = local.private_subnet.ap-northeast-1c
+  cidr_block        = var.private_cidr[1]
 
   tags = {
-    Name = "${local.project_name}-private-subnet-1c"
+    Name = "${var.env_code}-private-subnet-1c"
   }
 }
 
@@ -67,7 +67,7 @@ resource "aws_route_table" "public_rt" {
   vpc_id = aws_vpc.vpc.id
 
   tags = {
-    Name = "${local.project_name}-public-rt"
+    Name = "${var.env_code}-public-rt"
   }
 }
 
@@ -85,7 +85,7 @@ resource "aws_route_table" "private_rt_1a" {
   vpc_id = aws_vpc.vpc.id
 
   tags = {
-    Name = "${local.project_name}-private-rt-1a"
+    Name = "${var.env_code}-private-rt-1a"
   }
 }
 
@@ -93,7 +93,7 @@ resource "aws_route_table" "private_rt_1c" {
   vpc_id = aws_vpc.vpc.id
 
   tags = {
-    Name = "${local.project_name}-private-rt-1c"
+    Name = "${var.env_code}-private-rt-1c"
   }
 }
 
@@ -115,7 +115,7 @@ resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.vpc.id
 
   tags = {
-    Name = "${local.project_name}-private-igw"
+    Name = "${var.env_code}-private-igw"
   }
 }
 
@@ -133,7 +133,7 @@ resource "aws_eip" "ngw_1a" {
   depends_on = [aws_internet_gateway.igw]
 
   tags = {
-    Name = "${local.project_name}-eip-ngw-1a"
+    Name = "${var.env_code}-eip-ngw-1a"
   }
 }
 
@@ -142,7 +142,7 @@ resource "aws_eip" "ngw_1c" {
   depends_on = [aws_internet_gateway.igw]
 
   tags = {
-    Name = "${local.project_name}-eip-ngw-1c"
+    Name = "${var.env_code}-eip-ngw-1c"
   }
 }
 
@@ -156,7 +156,7 @@ resource "aws_nat_gateway" "ngw_1a" {
   depends_on = [aws_internet_gateway.igw]
 
   tags = {
-    Name = "${local.project_name}-ngw-1a"
+    Name = "${var.env_code}-ngw-1a"
   }
 }
 
@@ -167,7 +167,7 @@ resource "aws_nat_gateway" "ngw_1c" {
   depends_on = [aws_internet_gateway.igw]
 
   tags = {
-    Name = "${local.project_name}-ngw-1a"
+    Name = "${var.env_code}-ngw-1a"
   }
 }
 
