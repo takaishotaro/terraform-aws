@@ -30,7 +30,7 @@ resource "aws_subnet" "public_subnet" {
 }
 
 resource "aws_subnet" "private_subnet" {
-  count = length(var.public_cidr)
+  count = length(var.private_cidr)
 
   vpc_id            = aws_vpc.vpc.id
   availability_zone = var.az[count.index]
@@ -107,7 +107,7 @@ resource "aws_route_table_association" "public_rt" {
 }
 
 resource "aws_route_table" "private_rt" {
-  count = length(var.private_cidr)
+  count  = length(var.private_cidr)
   vpc_id = aws_vpc.vpc.id
 
   tags = {
@@ -122,7 +122,7 @@ resource "aws_route_table_association" "private_rt" {
   subnet_id      = aws_subnet.private_subnet[count.index].id
 }
 
-resource "aws_route" "public_rt_ngw_1a" {
+resource "aws_route" "public_rt_ngw" {
   count = length(var.private_cidr)
 
   route_table_id         = aws_route_table.private_rt[count.index].id
