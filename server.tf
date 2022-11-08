@@ -26,6 +26,12 @@ resource "aws_instance" "yourdevops-public-server" {
   subnet_id                   = aws_subnet.public_subnet[0].id
   vpc_security_group_ids      = [aws_security_group.ec2_sg.id]
   associate_public_ip_address = true
+  user_data                   = <<EOF
+    #!/bin/bash
+    yum update -y
+    yum install -y httpd
+    systemctl start httpd && systemctl enable httpd
+  EOF
 
   key_name = aws_key_pair.keypair.key_name
 
