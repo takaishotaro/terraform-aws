@@ -34,7 +34,7 @@ resource "aws_security_group" "public_sg" {
   }
 
   tags = {
-    Name   = "${var.env_code}-public-sg"
+    Name = "${var.env_code}-public-sg"
   }
 }
 
@@ -64,10 +64,10 @@ resource "aws_security_group" "private_sg" {
   }
 
   ingress {
-    description = "http from lb"
-    from_port = 80
-    to_port = 80
-    protocol = "tcp"
+    description     = "http from lb"
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
     security_groups = [aws_security_group.load_balancer.id]
   }
 
@@ -84,22 +84,22 @@ resource "aws_security_group" "private_sg" {
 }
 
 resource "aws_security_group" "load_balancer" {
-  name = "${var.env_code}-load-balancer"
+  name        = "${var.env_code}-load-balancer"
   description = "Allow port 80 tcp inbound to elb"
-  vpc_id = data.terraform_remote_state.level1.outputs.vpc_id
+  vpc_id      = data.terraform_remote_state.level1.outputs.vpc_id
 
   ingress {
     description = "http on elb"
-    protocol = "tcp"
-    from_port = 80
-    to_port = 80
+    protocol    = "tcp"
+    from_port   = 80
+    to_port     = 80
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
-    from_port = 0
-    to_port = 65535
-    protocol = "tcp"
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
