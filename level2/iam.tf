@@ -1,7 +1,7 @@
 resource "aws_iam_policy" "main" {
-  name = var.env_code
+  name        = var.env_code
   description = var.env_code
-  policy = <<EOF
+  policy      = <<EOF
 {
     "Version": "2012-10-17",
     "Statement":[
@@ -16,7 +16,7 @@ EOF
 }
 
 resource "aws_iam_role" "main" {
-  name = var.env_code
+  name               = var.env_code
   assume_role_policy = <<EOF
 {
     "Version": "2012-10-17",
@@ -36,7 +36,7 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "main" {
-  role = aws_iam_role.main.name
+  role       = aws_iam_role.main.name
   policy_arn = aws_iam_policy.main.arn
 }
 
