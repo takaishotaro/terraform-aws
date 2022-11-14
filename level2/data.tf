@@ -7,3 +7,21 @@ data "terraform_remote_state" "level1" {
     region = "ap-northeast-1"
   }
 }
+
+data "aws_ami" "amazonlinux" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm-2.0.*-x86_64-gp2"]
+  }
+  filter {
+    name   = "root-device-type"
+    values = ["ebs"]
+  }
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+}
