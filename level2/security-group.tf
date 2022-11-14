@@ -1,7 +1,7 @@
 # ---------------------------------------------
 # Security Group
 # ---------------------------------------------
-resource "aws_security_group" "public_sg" {
+resource "aws_security_group" "public" {
   name   = "${var.env_code}-public-sg"
   vpc_id = data.terraform_remote_state.level1.outputs.vpc_id
 
@@ -38,7 +38,7 @@ resource "aws_security_group" "public_sg" {
   }
 }
 
-resource "aws_security_group" "private_sg" {
+resource "aws_security_group" "private" {
   name   = "${var.env_code}-private-sg"
   vpc_id = data.terraform_remote_state.level1.outputs.vpc_id
 
