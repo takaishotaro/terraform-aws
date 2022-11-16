@@ -1,53 +1,10 @@
 # ---------------------------------------------
 # Security Group
 # ---------------------------------------------
-resource "aws_security_group" "public" {
-  name   = "${var.env_code}-public-sg"
-  vpc_id = data.terraform_remote_state.level1.outputs.vpc_id
-
-  ingress {
-    protocol    = "tcp"
-    from_port   = 22
-    to_port     = 22
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    protocol    = "tcp"
-    from_port   = 80
-    to_port     = 80
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    protocol    = "tcp"
-    from_port   = 443
-    to_port     = 443
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    protocol    = "-1"
-    from_port   = 0
-    to_port     = 0
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "${var.env_code}-public-sg"
-  }
-}
 
 resource "aws_security_group" "private" {
   name   = "${var.env_code}-private-sg"
   vpc_id = data.terraform_remote_state.level1.outputs.vpc_id
-
-  ingress {
-    protocol    = "tcp"
-    from_port   = 22
-    to_port     = 22
-    cidr_blocks = [data.terraform_remote_state.level1.outputs.vpc_cidr]
-  }
 
   ingress {
     protocol    = "tcp"
