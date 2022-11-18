@@ -6,6 +6,14 @@ resource "aws_security_group" "private" {
   vpc_id = var.vpc_id
 
   ingress {
+    description     = "https from lb"
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
+    security_groups = [var.load_balancer_sg.id]
+  }
+
+  ingress {
     description     = "http from lb"
     from_port       = 80
     to_port         = 80
